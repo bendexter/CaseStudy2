@@ -1,0 +1,108 @@
+---
+title: "Case_Study_2"
+author: "Ben Tanaka"
+date: "7/29/2019"
+output: 
+  html_document:
+    keep_md: true
+---
+
+```{r setup, echo=FALSE, include=FALSE, warning=FALSE,message =FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE,message =FALSE)
+library(xml2)
+library(rvest)
+library(stringr)
+library(tibble)
+library(data.table)
+library(knitr)
+library(kableExtra)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(bizdays)
+library(MTS)
+library(forecast)
+library(smooth)
+library(fpp2)
+library(lubridate)
+library(dygraphs)
+library(xts)
+library(readxl)
+library(tidyverse)
+library(gridExtra)
+library(grid)
+library(ggplot2)
+library(lattice)
+library(GGally)
+
+setwd("/users/ben/documents/r/Case_Study_2")
+getwd()
+```
+
+# DDSAnalytics:  Predicting Employee Turnover
+
+```{r ETL}
+df_emp_ren <- read_excel("CaseStudy2-data.xlsx")
+names(df_emp_ren)
+
+df_emp_ren$Attrition_Lvl <- factor(df_emp_ren$Attrition)
+str(df_emp_ren)
+summary(df_emp_ren)
+
+```
+
+
+## Employee Personal Demographics
+``` {r Employee_Demographics}
+EmpPerDem1 <- df_emp_ren[c("EducationField","Education","Attrition_Lvl")]
+ggpairs(EmpPerDem1)
+
+EmpPerDem2 <- df_emp_ren[c("NumCompaniesWorked","TotalWorkingYears", "DistanceFromHome" ,"Attrition_Lvl")]
+ggpairs(EmpPerDem2)
+
+EmpPerDem3 <- df_emp_ren[c("MaritalStatus","Gender","Over18","Age","Attrition_Lvl")]
+ggpairs(EmpPerDem3)
+
+```
+
+### Employee Personal Demographics:  Insights
+* Insights:
+    1.  enter insights here
+      + Hypothesis: 
+
+
+## Employee Pay Rates
+``` {r Employee Pay Rates}
+EmpPayRte1 <- df_emp_ren[c("HourlyRate", "DailyRate", "MonthlyRate","MonthlyIncome", "PercentSalaryHike","Attrition_Lvl")]
+ggpairs(EmpPayRte1)
+
+EmpPayRte2 <- df_emp_ren[c("StockOptionLevel","OverTime","Attrition_Lvl")]
+ggpairs(EmpPayRte2)
+
+```
+
+### Employee Pay Rates:  Insights
+* Insights:
+    1.  enter insights here
+      + Hypothesis: 
+
+## Employee Work Profile Demographics
+```{r Employee Work Profile Demographics}
+EmpPflDem1 <- df_emp_ren[c("YearsWithCurrManager","YearsSinceLastPromotion","YearsInCurrentRole","YearsAtCompany","PerformanceRating", "Attrition_Lvl")]
+ggpairs(EmpPflDem1)
+
+EmpPflDem2 <- df_emp_ren[c("WorkLifeBalance","RelationshipSatisfaction","JobSatisfaction","JobInvolvement","EnvironmentSatisfaction", "Attrition_Lvl")]
+ggpairs(EmpPflDem2)
+
+EmpPflDem3 <- df_emp_ren[c("TrainingTimesLastYear","StandardHours","JobRole","JobLevel","Department","BusinessTravel", "Attrition_Lvl")]
+ggpairs(EmpPflDem3)
+
+EmpPflDem4 <- df_emp_ren[c("YearsAtCompany", "YearsInCurrentRole", "YearsSinceLastPromotion","YearsWithCurrManager", "Attrition_Lvl")]
+ggpairs(EmpPflDem4)
+
+```
+
+### Employee Work Profile Demographics:  Insights
+* Insights:
+    1.  enter insights here
+      + Hypothesis: 
