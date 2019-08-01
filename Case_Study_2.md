@@ -171,18 +171,64 @@ ggpairs(EmpPerDem1)
 ![](Case_Study_2_files/figure-html/Employee_Demographics-1.png)<!-- -->
 
 ```r
+p1 <- df_emp_ren %>%
+  ggplot(aes(x = EducationField, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Education Field")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p2 <- df_emp_ren %>%
+  ggplot(aes(x = Education, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Education")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+
+grid.arrange(p1, p2, nrow = 1, ncol = 2)
+```
+
+![](Case_Study_2_files/figure-html/Employee_Demographics-2.png)<!-- -->
+
+```r
 EmpPerDem2 <- df_emp_ren[c("NumCompaniesWorked","TotalWorkingYears", "DistanceFromHome" ,"Attrition_Lvl")]
 ggpairs(EmpPerDem2)
 ```
 
-![](Case_Study_2_files/figure-html/Employee_Demographics-2.png)<!-- -->
+![](Case_Study_2_files/figure-html/Employee_Demographics-3.png)<!-- -->
+
+```r
+p1 <- df_emp_ren %>%
+  ggplot(aes(x = NumCompaniesWorked, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Number Companies Worked")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p2 <- df_emp_ren %>%
+  ggplot(aes(x = TotalWorkingYears, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Total Working Years")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p3 <- df_emp_ren %>%
+  ggplot(aes(x = DistanceFromHome, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Distance From Home")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+grid.arrange(p1, p2, p3, nrow = 2, ncol = 2)
+```
+
+![](Case_Study_2_files/figure-html/Employee_Demographics-4.png)<!-- -->
 
 ```r
 EmpPerDem3 <- df_emp_ren[c("MaritalStatus","Gender","Over18","Age","Attrition_Lvl")]
 ggpairs(EmpPerDem3)
 ```
 
-![](Case_Study_2_files/figure-html/Employee_Demographics-3.png)<!-- -->
+![](Case_Study_2_files/figure-html/Employee_Demographics-5.png)<!-- -->
+
+```r
+p1 <- df_emp_ren %>%
+  ggplot(aes(x = MaritalStatus, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Marital Status")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p2 <- df_emp_ren %>%
+  ggplot(aes(x = Gender, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Gender")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p3 <- df_emp_ren %>%
+  ggplot(aes(x = Over18, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Over 18")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p4 <- df_emp_ren %>%
+  ggplot(aes(x = Age, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Age")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+grid.arrange(p1, p2, p3, p4, nrow = 2, ncol = 2)
+```
+
+![](Case_Study_2_files/figure-html/Employee_Demographics-6.png)<!-- -->
 
 ### Employee Personal Demographics:  Insights
 * Insights:
@@ -200,11 +246,45 @@ ggpairs(EmpPayRte1)
 ![](Case_Study_2_files/figure-html/Employee Pay Rates-1.png)<!-- -->
 
 ```r
+p1 <- df_emp_ren %>%
+  ggplot(aes(x = HourlyRate, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Hourly Rate")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p2 <- df_emp_ren %>%
+  ggplot(aes(x = DailyRate, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Daily Rate")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p3 <- df_emp_ren %>%
+  ggplot(aes(x = MonthlyRate, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Monthly Rate")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p4 <- df_emp_ren %>%
+  ggplot(aes(x = MonthlyIncome, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Monthly Income")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p5 <- df_emp_ren %>%
+  ggplot(aes(x = PercentSalaryHike, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Percent Salary Hike")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+grid.arrange(p1, p2, p3, p4, p5, nrow = 3, ncol = 3)
+```
+
+![](Case_Study_2_files/figure-html/Employee Pay Rates-2.png)<!-- -->
+
+```r
 EmpPayRte2 <- df_emp_ren[c("StockOptionLevel","OverTime","Attrition_Lvl")]
 ggpairs(EmpPayRte2)
 ```
 
-![](Case_Study_2_files/figure-html/Employee Pay Rates-2.png)<!-- -->
+![](Case_Study_2_files/figure-html/Employee Pay Rates-3.png)<!-- -->
+
+```r
+p1 <- df_emp_ren %>%
+  ggplot(aes(x = StockOptionLevel, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Stock Option Level")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p2 <- df_emp_ren %>%
+  ggplot(aes(x = OverTime, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Over Time")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+
+grid.arrange(p1, p2, nrow = 1, ncol = 2)
+```
+
+![](Case_Study_2_files/figure-html/Employee Pay Rates-4.png)<!-- -->
 
 ### Employee Pay Rates:  Insights
 * Insights:
@@ -221,27 +301,113 @@ ggpairs(EmpPflDem1)
 ![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-1.png)<!-- -->
 
 ```r
+p1 <- df_emp_ren %>%
+  ggplot(aes(x = YearsWithCurrManager, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Years With Current Manager")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p2 <- df_emp_ren %>%
+  ggplot(aes(x = YearsSinceLastPromotion, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Years Since Last Promotion")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p3 <- df_emp_ren %>%
+  ggplot(aes(x = YearsInCurrentRole, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Years In Current Role")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p4 <- df_emp_ren %>%
+  ggplot(aes(x = YearsAtCompany, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Years At Company")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p5 <- df_emp_ren %>%
+  ggplot(aes(x = PerformanceRating, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Performance Rating")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+grid.arrange(p1, p2, p3, p4, p5, nrow = 3, ncol = 3)
+```
+
+![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-2.png)<!-- -->
+
+```r
 EmpPflDem2 <- df_emp_ren[c("WorkLifeBalance","RelationshipSatisfaction","JobSatisfaction","JobInvolvement","EnvironmentSatisfaction", "Attrition_Lvl")]
 ggpairs(EmpPflDem2)
 ```
 
-![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-2.png)<!-- -->
+![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-3.png)<!-- -->
+
+```r
+p1 <- df_emp_ren %>%
+  ggplot(aes(x = WorkLifeBalance, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Work Life Balance")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p2 <- df_emp_ren %>%
+  ggplot(aes(x = RelationshipSatisfaction, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Relationship Satisfaction")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p3 <- df_emp_ren %>%
+  ggplot(aes(x = JobSatisfaction, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Job Satisfaction")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p4 <- df_emp_ren %>%
+  ggplot(aes(x = JobInvolvement, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Job Involvement")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p5 <- df_emp_ren %>%
+  ggplot(aes(x = EnvironmentSatisfaction, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Environment Satisfaction")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+grid.arrange(p1, p2, p3, p4, p5, nrow = 3, ncol = 3)
+```
+
+![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-4.png)<!-- -->
 
 ```r
 EmpPflDem3 <- df_emp_ren[c("TrainingTimesLastYear","StandardHours","JobRole","JobLevel","Department","BusinessTravel", "Attrition_Lvl")]
 ggpairs(EmpPflDem3)
 ```
 
-![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-3.png)<!-- -->
+![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-5.png)<!-- -->
+
+```r
+p1 <- df_emp_ren %>%
+  ggplot(aes(x = TrainingTimesLastYear, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Training Times Last Year")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p2 <- df_emp_ren %>%
+  ggplot(aes(x = StandardHours, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Standard Hours")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p3 <- df_emp_ren %>%
+  ggplot(aes(x = JobRole, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Job Role")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p4 <- df_emp_ren %>%
+  ggplot(aes(x = Department, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Department")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p5 <- df_emp_ren %>%
+  ggplot(aes(x = BusinessTravel, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Business Travel")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+grid.arrange(p1, p2, p3, p4, p5, nrow = 3, ncol = 3)
+```
+
+![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-6.png)<!-- -->
 
 ```r
 EmpPflDem4 <- df_emp_ren[c("YearsAtCompany", "YearsInCurrentRole", "YearsSinceLastPromotion","YearsWithCurrManager", "Attrition_Lvl")]
 ggpairs(EmpPflDem4)
 ```
 
-![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-4.png)<!-- -->
+![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-7.png)<!-- -->
+
+```r
+p1 <- df_emp_ren %>%
+  ggplot(aes(x = YearsAtCompany, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Years At Company")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p2 <- df_emp_ren %>%
+  ggplot(aes(x = YearsInCurrentRole, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Years In Current Role")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p3 <- df_emp_ren %>%
+  ggplot(aes(x = YearsSinceLastPromotion, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Years Since Last Promotion")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p4 <- df_emp_ren %>%
+  ggplot(aes(x = YearsWithCurrManager, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Years With Current Manager")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+grid.arrange(p1, p2, p3, p4,  nrow = 2, ncol = 2)
+```
+
+![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-8.png)<!-- -->
 
 ### Employee Work Profile Demographics:  Insights
 * Insights:
     1.  enter insights here
       + Hypothesis: 
+      
+      
+  
+
+
