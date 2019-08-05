@@ -34,6 +34,9 @@ library(grid)
 library(ggplot2)
 library(lattice)
 library(GGally)
+library(psych)
+library(scales)
+library(cowplot)
 
 setwd("/users/ben/documents/r/Case_Study_2")
 getwd()
@@ -50,21 +53,58 @@ str(df_emp_ren)
 summary(df_emp_ren)
 
 ```
+## Transform Factors into actual results
 
+``` {r Transform Factors}
+df_emp_ren <- df_emp_ren %>%
+  mutate(Education = as.factor(if_else(Education == 1,"Below College", if_else(Education == 2, "College", if_else(Education == 3, "Bachelor", if_else(Education == 4, "Master","Doctor")))))
+         ,EnvironmentSatisfaction = as.factor(if_else(EnvironmentSatisfaction == 1,"Low",if_else(EnvironmentSatisfaction == 2, "Medium", if_else(EnvironmentSatisfaction == 3, "High", "Very High"))))
+         ,JobInvolvement = as.factor(if_else(JobInvolvement == 1,"Low",if_else(JobInvolvement == 2, "Medium",if_else(JobInvolvement == 3, "High", "Very High"))))
+         ,JobSatisfaction = as.factor(if_else(JobSatisfaction == 1, "Low",if_else(JobSatisfaction == 2, "Medium",if_else(JobSatisfaction == 3, "High","Very High"))))
+         ,PerformanceRating = as.factor(if_else(PerformanceRating == 1, "Low",if_else(PerformanceRating == 2, "Good", if_else(PerformanceRating == 3, "Excellent", "Outstanding"))))
+         ,RelationshipSatisfaction = as.factor(if_else(RelationshipSatisfaction == 1, "Low",if_else(RelationshipSatisfaction == 2, "Medium", if_else(RelationshipSatisfaction == 3, "High", "Very High"))))
+         ,WorkLifeBalance = as.factor(if_else(WorkLifeBalance == 1, "Bad",if_else(WorkLifeBalance == 2, "Good", if_else(WorkLifeBalance == 3, "Better", "Best"))))
+         ,JobLevel = as.factor(JobLevel)
+         )
+```
 
 ## Employee Personal Demographics
 ``` {r Employee_Demographics}
-EmpPerDem1 <- df_emp_ren[c("EducationField","Education","Attrition_Lvl")]
-ggpairs(EmpPerDem1)
 
-p1 <- df_emp_ren %>%
-  ggplot(aes(x = EducationField, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Education Field")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+p1 <- ggplot(df_emp_ren, aes(x=EducationField ,  group=Attrition)) +
+geom_bar(aes(y = ..prop.., fill = factor(..x..)), stat="count") +
+geom_text(aes( label = scales::percent(..prop..),
+y= ..prop.. ), stat= "count", size = 2.5, position=position_dodge(width=0.2)) +
+labs(y = "Percent", fill="EducationField") +
+theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +
+theme(legend.position = "none") +
+ggtitle("Attrition Counts - Education Field")+
+facet_grid(~Attrition) +
+scale_y_continuous(labels = scales::percent)
 
 p2 <- df_emp_ren %>%
-  ggplot(aes(x = Education, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Education")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+  group_by(EducationField) %>%
+  summarise(attrition_rate = round((sum(if_else(Attrition == "Yes",1,0))/n()*100),2)) %>%
+  ggplot(aes(x = EducationField, y = attrition_rate))+ geom_bar(stat = 'identity',fill = "coral3") + ggtitle("Attrition Rate - Education Field") + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +geom_text(aes(label=attrition_rate), size = 2.5, position=position_dodge(width=0.2), vjust=-0.25)+ scale_y_continuous(limits = c(0, 30))
+
+p3 <- ggplot(df_emp_ren, aes(x=Education ,  group=Attrition)) +
+geom_bar(aes(y = ..prop.., fill = factor(..x..)), stat="count") +
+geom_text(aes( label = scales::percent(..prop..),
+y= ..prop.. ), stat= "count",  size = 2.5, position=position_dodge(width=0.2)) +
+labs(y = "Percent", fill="Attrition_Lvl") +
+  theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +
+  theme(legend.position = "none") +
+  ggtitle("Attrition Counts - Education")+
+facet_grid(~Attrition) +
+scale_y_continuous(labels = scales::percent)
+
+p4 <- df_emp_ren %>%
+  group_by(Education) %>%
+  summarise(attrition_rate = round((sum(if_else(Attrition == "Yes",1,0))/n()*100),2)) %>%
+  ggplot(aes(x = Education, y = attrition_rate))+ geom_bar(stat = 'identity',fill = "coral3") + ggtitle("Attrition Rate - Education") + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +geom_text(aes(label=attrition_rate), size = 2.5, position=position_dodge(width=0.2), vjust=-0.25)+ scale_y_continuous(limits = c(0, 30))
 
 
-grid.arrange(p1, p2, nrow = 1, ncol = 2)
+grid.arrange(p1, p2, p3, p4, nrow = 2, ncol = 2)
 
 
 EmpPerDem2 <- df_emp_ren[c("NumCompaniesWorked","TotalWorkingYears", "DistanceFromHome" ,"Attrition_Lvl")]
@@ -81,23 +121,50 @@ p3 <- df_emp_ren %>%
 
 grid.arrange(p1, p2, p3, nrow = 2, ncol = 2)
 
-EmpPerDem3 <- df_emp_ren[c("MaritalStatus","Gender","Over18","Age","Attrition_Lvl")]
-ggpairs(EmpPerDem3)
 
-p1 <- df_emp_ren %>%
-  ggplot(aes(x = MaritalStatus, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Marital Status")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+p1 <- ggplot(df_emp_ren, aes(x=MaritalStatus ,  group=Attrition)) +
+geom_bar(aes(y = ..prop.., fill = factor(..x..)), stat="count") +
+geom_text(aes( label = scales::percent(..prop..),
+y= ..prop.. ), stat= "count", size = 2.5, position=position_dodge(width=0.2)) +
+labs(y = "Percent", fill="MaritalStatus") +
+theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +
+theme(legend.position = "none") +
+ggtitle("Attrition Counts - Marital Status")+
+facet_grid(~Attrition) +
+scale_y_continuous(labels = scales::percent)
 
 p2 <- df_emp_ren %>%
-  ggplot(aes(x = Gender, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Gender")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+  group_by(MaritalStatus) %>%
+  summarise(attrition_rate = round((sum(if_else(Attrition == "Yes",1,0))/n()*100),2)) %>%
+  ggplot(aes(x = MaritalStatus, y = attrition_rate))+ geom_bar(stat = 'identity',fill = "coral3") + ggtitle("Attrition Rate - MaritalStatus") + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +geom_text(aes(label=attrition_rate), size = 2.5, position=position_dodge(width=0.2), vjust=-0.25)+ scale_y_continuous(limits = c(0, 30))
 
-p3 <- df_emp_ren %>%
-  ggplot(aes(x = Over18, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Over 18")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p3 <- ggplot(df_emp_ren, aes(x=Gender ,  group=Attrition)) +
+geom_bar(aes(y = ..prop.., fill = factor(..x..)), stat="count") +
+geom_text(aes( label = scales::percent(..prop..),
+y= ..prop.. ), stat= "count", size = 2.5, position=position_dodge(width=0.2)) +
+labs(y = "Percent", fill="Gender") +
+theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +
+theme(legend.position = "none") +
+ggtitle("Attrition Counts - Gender")+
+facet_grid(~Attrition) +
+scale_y_continuous(labels = scales::percent)
 
 p4 <- df_emp_ren %>%
-  ggplot(aes(x = Age, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Age")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+  group_by(Gender) %>%
+  summarise(attrition_rate = round((sum(if_else(Attrition == "Yes",1,0))/n()*100),2)) %>%
+  ggplot(aes(x = Gender, y = attrition_rate))+ geom_bar(stat = 'identity',fill = "coral3") + ggtitle("Attrition Rate - Gender") + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +geom_text(aes(label=attrition_rate), size = 2.5, position=position_dodge(width=0.2), vjust=-0.25)+ scale_y_continuous(limits = c(0, 30))
+
 
 grid.arrange(p1, p2, p3, p4, nrow = 2, ncol = 2)
 
+EmpPerDem3 <- df_emp_ren[c("Age","Attrition_Lvl")]
+ggpairs(EmpPerDem3)
+
+p3 <- df_emp_ren %>%
+  ggplot(aes(x = Age, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Age")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+
+p3
 ```
 
 ### Employee Personal Demographics:  Insights
@@ -234,7 +301,15 @@ grid.arrange(p1, p2, p3, p4,  nrow = 2, ncol = 2)
       
       
   
-``` {r Regression_Analysis}
+``` {r Deep_Dives}
+p1 <- ggplot(df_emp_ren, aes(x= Attrition,  group=EducationField)) +
+geom_bar(aes(y = ..prop.., fill = factor(..x..)), stat="count") +
+geom_text(aes( label = scales::percent(..prop..),
+y= ..prop.. ), stat= "count", vjust = -.5) +
+labs(y = "Percent", fill="Attrition_Lvl") +
+facet_grid(~EducationField) +
+scale_y_continuous(labels = scales::percent)
+
 
 
 
