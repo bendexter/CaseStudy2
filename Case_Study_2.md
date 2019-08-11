@@ -296,8 +296,21 @@ p3
 
 ### Employee Personal Demographics:  Insights
 * Insights:
-    1.  enter insights here
-      + Hypothesis: 
+    1.  Employees with an education field in Life Science and Medical tend to have higher counts of attrition however those who have a background in Human Resources and/or a Technical degree tend to have higher attrition rates.
+      + Hypothesis: Human Resource employees drive the most attrition rates.
+    2.  Employees with a Bachelor & Masters degree have higher counts of attrition, whereas, those with a below college degree tend to have higher rates of attrition.
+      + Hypothesis:  Employees with a human resources education field and a below college education will have higher rates of attrition.
+    3.  The more companies a person works for the higher the attrtion level.  
+    4.  There was a higher amount rate of employees who leave when they have less working years.  
+    5.  The Distance from home was can be used as a factor for higher attrition rates.  As the farther away the employee is the more likely they are to leave.
+    + Hypothesis:  Greater distance from work will drive higher attrition.
+    6.  People who are single tend to have higher attrition rates
+      +  Hypothesis:  Employess who have not been in a commited relationship could leave the company.  Singles nights at work could help drive lower attrition rates.  
+    7.  Males tend to have a higher attrition rate although not to a significant degreee
+      + Hypothesis:  Gender does not contribute to higher attrition rate.
+    8.  Employees who are younger tend to have higher attrition rates.
+      + Hypothesis:  Younger employees are more likely to leave the company
+      
 
 
 ## Employee Pay Rates
@@ -352,8 +365,13 @@ grid.arrange(p1, p2, nrow = 1, ncol = 2)
 
 ### Employee Pay Rates:  Insights
 * Insights:
-    1.  enter insights here
-      + Hypothesis: 
+    1.  Lower hourly & daily rates did experience higer attrition rates when they pay was lower.  This also impacted the Monthly Income in which basically, those employees who make less tend to leave.
+      + Hypothesis: Employees with lower monthly incomes and daily/hourly rates tend to have higher attrition rates
+    2.  The Month rates did have a small spike as the lower incomes however it was not conclusive it will be able to help as a identifying factor for attrition.
+    3.  Employees with lower stock options have a higher rate of attrition.
+    +  Hypothesis:  Employees with lower stock options will tend to leave the company.  Coupling stock option values as well as Monthly income will help generate a wholistic approach to work compensation
+    4.  Overtime did show a slight indication of attrition however, it will generate higher monthly income which was shown to drive lower attrition.  
+    +  Hypothesis:  Employees who work excessice overtime will tend to leave the company if it doesn't generate enough of a monthly income.
 
 ## Employee Work Profile Demographics
 
@@ -377,10 +395,23 @@ p3 <- df_emp_ren %>%
 p4 <- df_emp_ren %>%
   ggplot(aes(x = YearsAtCompany, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Years At Company")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
 
-p5 <- df_emp_ren %>%
-  ggplot(aes(x = PerformanceRating, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Performance Rating")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+p5 <- ggplot(df_emp_ren, aes(x=PerformanceRating ,  group=Attrition)) +
+geom_bar(aes(y = ..prop.., fill = factor(..x..)), stat="count") +
+geom_text(aes( label = scales::percent(..prop..),
+y= ..prop.. ), stat= "count", size = 2.5, position=position_dodge(width=0.2)) +
+labs(y = "Percent", fill="PerformanceRating") +
+theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +
+theme(legend.position = "none") +
+ggtitle("Attrition Counts - Performance Rating")+
+facet_grid(~Attrition) +
+scale_y_continuous(labels = scales::percent)
 
-grid.arrange(p1, p2, p3, p4, p5, nrow = 3, ncol = 3)
+p6 <- df_emp_ren %>%
+  group_by(PerformanceRating) %>%
+  summarise(attrition_rate = round((sum(if_else(Attrition == "Yes",1,0))/n()*100),2)) %>%
+  ggplot(aes(x = PerformanceRating, y = attrition_rate))+ geom_bar(stat = 'identity',fill = "coral3") + ggtitle("Attrition Rate - Performance Rating") + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +geom_text(aes(label=attrition_rate), size = 2.5, position=position_dodge(width=0.2), vjust=-0.25)+ scale_y_continuous(limits = c(0, 30))
+
+grid.arrange(p1, p2, p3, p4, p5,p6, nrow = 3, ncol = 3)
 ```
 
 ![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-2.png)<!-- -->
@@ -393,32 +424,109 @@ ggpairs(EmpPflDem2)
 ![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-3.png)<!-- -->
 
 ```r
-p1 <- df_emp_ren %>%
-  ggplot(aes(x = WorkLifeBalance, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Work Life Balance")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+p1 <- ggplot(df_emp_ren, aes(x=WorkLifeBalance ,  group=Attrition)) +
+geom_bar(aes(y = ..prop.., fill = factor(..x..)), stat="count") +
+geom_text(aes( label = scales::percent(..prop..),
+y= ..prop.. ), stat= "count", size = 2.5, position=position_dodge(width=0.2)) +
+labs(y = "Percent", fill="WorkLifeBalance") +
+theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +
+theme(legend.position = "none") +
+ggtitle("Attrition Counts - Work Life Balance")+
+facet_grid(~Attrition) +
+scale_y_continuous(labels = scales::percent)
 
 p2 <- df_emp_ren %>%
-  ggplot(aes(x = RelationshipSatisfaction, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Relationship Satisfaction")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+  group_by(WorkLifeBalance) %>%
+  summarise(attrition_rate = round((sum(if_else(Attrition == "Yes",1,0))/n()*100),2)) %>%
+  ggplot(aes(x = WorkLifeBalance, y = attrition_rate))+ geom_bar(stat = 'identity',fill = "coral3") + ggtitle("Attrition Rate - Work life Balance") + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +geom_text(aes(label=attrition_rate), size = 2.5, position=position_dodge(width=0.2), vjust=-0.25)+ scale_y_continuous(limits = c(0, 30))
 
-p3 <- df_emp_ren %>%
-  ggplot(aes(x = JobSatisfaction, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Job Satisfaction")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+p3 <- ggplot(df_emp_ren, aes(x=RelationshipSatisfaction ,  group=Attrition)) +
+geom_bar(aes(y = ..prop.., fill = factor(..x..)), stat="count") +
+geom_text(aes( label = scales::percent(..prop..),
+y= ..prop.. ), stat= "count", size = 2.5, position=position_dodge(width=0.2)) +
+labs(y = "Percent", fill="RelationshipSatisfaction") +
+theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +
+theme(legend.position = "none") +
+ggtitle("Attrition Counts - Relationship Satisfaction")+
+facet_grid(~Attrition) +
+scale_y_continuous(labels = scales::percent)
 
 p4 <- df_emp_ren %>%
-  ggplot(aes(x = JobInvolvement, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Job Involvement")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+  group_by(RelationshipSatisfaction) %>%
+  summarise(attrition_rate = round((sum(if_else(Attrition == "Yes",1,0))/n()*100),2)) %>%
+  ggplot(aes(x = RelationshipSatisfaction, y = attrition_rate))+ geom_bar(stat = 'identity',fill = "coral3") + ggtitle("Attrition Rate - Relationship Satisfaction") + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +geom_text(aes(label=attrition_rate), size = 2.5, position=position_dodge(width=0.2), vjust=-0.25)+ scale_y_continuous(limits = c(0, 30))
 
-p5 <- df_emp_ren %>%
-  ggplot(aes(x = EnvironmentSatisfaction, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Environment Satisfaction")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+p5 <- ggplot(df_emp_ren, aes(x=JobSatisfaction ,  group=Attrition)) +
+geom_bar(aes(y = ..prop.., fill = factor(..x..)), stat="count") +
+geom_text(aes( label = scales::percent(..prop..),
+y= ..prop.. ), stat= "count", size = 2.5, position=position_dodge(width=0.2)) +
+labs(y = "Percent", fill="JobSatisfaction") +
+theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +
+theme(legend.position = "none") +
+ggtitle("Attrition Counts - Job Satisfaction")+
+facet_grid(~Attrition) +
+scale_y_continuous(labels = scales::percent)
 
-grid.arrange(p1, p2, p3, p4, p5, nrow = 3, ncol = 3)
+p6 <- df_emp_ren %>%
+  group_by(JobSatisfaction) %>%
+  summarise(attrition_rate = round((sum(if_else(Attrition == "Yes",1,0))/n()*100),2)) %>%
+  ggplot(aes(x = JobSatisfaction, y = attrition_rate))+ geom_bar(stat = 'identity',fill = "coral3") + ggtitle("Attrition Rate - Job Satisfaction") + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +geom_text(aes(label=attrition_rate), size = 2.5, position=position_dodge(width=0.2), vjust=-0.25)+ scale_y_continuous(limits = c(0, 100))
+
+p7 <- ggplot(df_emp_ren, aes(x=JobInvolvement ,  group=Attrition)) +
+geom_bar(aes(y = ..prop.., fill = factor(..x..)), stat="count") +
+geom_text(aes( label = scales::percent(..prop..),
+y= ..prop.. ), stat= "count", size = 2.5, position=position_dodge(width=0.2)) +
+labs(y = "Percent", fill="JobInvolvement") +
+theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +
+theme(legend.position = "none") +
+ggtitle("Attrition Counts - Job Involement")+
+facet_grid(~Attrition) +
+scale_y_continuous(labels = scales::percent)
+
+p8 <- df_emp_ren %>%
+  group_by(JobInvolvement) %>%
+  summarise(attrition_rate = round((sum(if_else(Attrition == "Yes",1,0))/n()*100),2)) %>%
+  ggplot(aes(x = JobInvolvement, y = attrition_rate))+ geom_bar(stat = 'identity',fill = "coral3") + ggtitle("Attrition Rate - Job Involvement") + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +geom_text(aes(label=attrition_rate), size = 2.5, position=position_dodge(width=0.2), vjust=-0.25)+ scale_y_continuous(limits = c(0, 100))
+
+p9 <- ggplot(df_emp_ren, aes(x=EnvironmentSatisfaction ,  group=Attrition)) +
+geom_bar(aes(y = ..prop.., fill = factor(..x..)), stat="count") +
+geom_text(aes( label = scales::percent(..prop..),
+y= ..prop.. ), stat= "count", size = 2.5, position=position_dodge(width=0.2)) +
+labs(y = "Percent", fill="EnvironmentSatisfaction") +
+theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +
+theme(legend.position = "none") +
+ggtitle("Attrition Counts - Environment Satisfaction")+
+facet_grid(~Attrition) +
+scale_y_continuous(labels = scales::percent)
+
+p10 <- df_emp_ren %>%
+  group_by(EnvironmentSatisfaction) %>%
+  summarise(attrition_rate = round((sum(if_else(Attrition == "Yes",1,0))/n()*100),2)) %>%
+  ggplot(aes(x = EnvironmentSatisfaction, y = attrition_rate))+ geom_bar(stat = 'identity',fill = "coral3") + ggtitle("Attrition Rate - Environment Satisfaction") + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +geom_text(aes(label=attrition_rate), size = 2.5, position=position_dodge(width=0.2), vjust=-0.25)+ scale_y_continuous(limits = c(0, 30))
+
+grid.arrange(p1, p2, p3, p4,  nrow = 2, ncol = 2)
 ```
 
 ![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-4.png)<!-- -->
+
+```r
+grid.arrange(p5, p6, p7, p8,  nrow = 2, ncol = 2)
+```
+
+![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-5.png)<!-- -->
+
+```r
+grid.arrange( p9, p10, nrow = 1, ncol = 2)
+```
+
+![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-6.png)<!-- -->
 
 ```r
 EmpPflDem3 <- df_emp_ren[c("TrainingTimesLastYear","StandardHours","JobRole","JobLevel","Department","BusinessTravel", "Attrition_Lvl")]
 ggpairs(EmpPflDem3)
 ```
 
-![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-5.png)<!-- -->
+![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-7.png)<!-- -->
 
 ```r
 p1 <- df_emp_ren %>%
@@ -427,26 +535,71 @@ p1 <- df_emp_ren %>%
 p2 <- df_emp_ren %>%
   ggplot(aes(x = StandardHours, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Standard Hours")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
 
-p3 <- df_emp_ren %>%
-  ggplot(aes(x = JobRole, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Job Role")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+p3 <- ggplot(df_emp_ren, aes(x=JobRole ,  group=Attrition)) +
+geom_bar(aes(y = ..prop.., fill = factor(..x..)), stat="count") +
+geom_text(aes( label = scales::percent(..prop..),
+y= ..prop.. ), stat= "count", size = 2.5, position=position_dodge(width=0.2)) +
+labs(y = "Percent", fill="JobRole") +
+theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +
+theme(legend.position = "none") +
+ggtitle("Attrition Counts - Job Role")+
+facet_grid(~Attrition) +
+scale_y_continuous(labels = scales::percent)
 
 p4 <- df_emp_ren %>%
-  ggplot(aes(x = Department, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Department")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+  group_by(JobRole) %>%
+  summarise(attrition_rate = round((sum(if_else(Attrition == "Yes",1,0))/n()*100),2)) %>%
+  ggplot(aes(x = JobRole, y = attrition_rate))+ geom_bar(stat = 'identity',fill = "coral3") + ggtitle("Attrition Rate - Job Role") + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +geom_text(aes(label=attrition_rate), size = 2.5, position=position_dodge(width=0.2), vjust=-0.25)+ scale_y_continuous(limits = c(0, 100))
 
-p5 <- df_emp_ren %>%
-  ggplot(aes(x = BusinessTravel, fill = Attrition)) + geom_density(alpha = 0.5) + ggtitle("Business Travel")  + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank())
+p5 <- ggplot(df_emp_ren, aes(x=Department ,  group=Attrition)) +
+geom_bar(aes(y = ..prop.., fill = factor(..x..)), stat="count") +
+geom_text(aes( label = scales::percent(..prop..),
+y= ..prop.. ), stat= "count", size = 2.5, position=position_dodge(width=0.2)) +
+labs(y = "Percent", fill="Department") +
+theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +
+theme(legend.position = "none") +
+ggtitle("Attrition Counts - Department")+
+facet_grid(~Attrition) +
+scale_y_continuous(labels = scales::percent)
 
-grid.arrange(p1, p2, p3, p4, p5, nrow = 3, ncol = 3)
+p6 <- df_emp_ren %>%
+  group_by(Department) %>%
+  summarise(attrition_rate = round((sum(if_else(Attrition == "Yes",1,0))/n()*100),2)) %>%
+  ggplot(aes(x = Department, y = attrition_rate))+ geom_bar(stat = 'identity',fill = "coral3") + ggtitle("Attrition Rate - Department") + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +geom_text(aes(label=attrition_rate), size = 2.5, position=position_dodge(width=0.2), vjust=-0.25)+ scale_y_continuous(limits = c(0, 30))
+
+p7 <- ggplot(df_emp_ren, aes(x=BusinessTravel ,  group=Attrition)) +
+geom_bar(aes(y = ..prop.., fill = factor(..x..)), stat="count") +
+geom_text(aes( label = scales::percent(..prop..),
+y= ..prop.. ), stat= "count", size = 2.5, position=position_dodge(width=0.2)) +
+labs(y = "Percent", fill="BusinessTravel") +
+theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +
+theme(legend.position = "none") +
+ggtitle("Attrition Counts - Business Travel")+
+facet_grid(~Attrition) +
+scale_y_continuous(labels = scales::percent)
+
+p8 <- df_emp_ren %>%
+  group_by(BusinessTravel) %>%
+  summarise(attrition_rate = round((sum(if_else(Attrition == "Yes",1,0))/n()*100),2)) %>%
+  ggplot(aes(x = BusinessTravel, y = attrition_rate))+ geom_bar(stat = 'identity',fill = "coral3") + ggtitle("Attrition Rate - Business Travel") + theme(plot.title = element_text(size =10),axis.text.x = element_text(size =7,angle = 45, hjust = 1),axis.title.x=element_blank()) +geom_text(aes(label=attrition_rate), size = 2.5, position=position_dodge(width=0.2), vjust=-0.25)+ scale_y_continuous(limits = c(0, 30))
+
+grid.arrange(p1, p2, p3, p4, nrow = 2, ncol = 2)
 ```
 
-![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-6.png)<!-- -->
+![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-8.png)<!-- -->
+
+```r
+grid.arrange( p5,p6,p7,p8, nrow = 2, ncol = 2)
+```
+
+![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-9.png)<!-- -->
 
 ```r
 EmpPflDem4 <- df_emp_ren[c("YearsAtCompany", "YearsInCurrentRole", "YearsSinceLastPromotion","YearsWithCurrManager", "Attrition_Lvl")]
 ggpairs(EmpPflDem4)
 ```
 
-![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-7.png)<!-- -->
+![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-10.png)<!-- -->
 
 ```r
 p1 <- df_emp_ren %>%
@@ -464,23 +617,28 @@ p4 <- df_emp_ren %>%
 grid.arrange(p1, p2, p3, p4,  nrow = 2, ncol = 2)
 ```
 
-![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-8.png)<!-- -->
+![](Case_Study_2_files/figure-html/Employee Work Profile Demographics-11.png)<!-- -->
 
 ### Employee Work Profile Demographics:  Insights
 * Insights:
-    1.  enter insights here
-      + Hypothesis: 
+    1.  Employees with less tenure at the company are more likely to leave the company.
+      + Hypothesis: This is a direct correlation with Years in current role as well as years with current manager.  
+    2.  Employees with less time with their current manager then to have higher rates of attrition.
+    + Hypothesis:  Employees may not be getting along with their current manager
+    3.  Employees who have less years in their current role have higher rates of attrition.
+    + Hypothesis:  Employees who have been placed in a role they do not like.
+    4.  Employees with Low Job satisfaction tend to have high rates of attrition
+    + Hypothesis:  Lower job satisfaction leads to higher attrition
+    5.  Low Relationship status has higher attrition rates
+    + Hypothesis:  Employees with Low Relationship status have higher attrition rates.
+    6.  Employees with low employee satisfaction have higher rates of attrition.
+    7.  Employees who are Sales Representatives have a high rate of attrition, as well as those who are in the sales department.
+    8.  Employees who travel frequently have higher rates of attrition.
+    9.  Employees how are newer to the company have a high rate of attrition.  
+
+    
       
       
   
 
-```r
-p1 <- ggplot(df_emp_ren, aes(x= Attrition,  group=EducationField)) +
-geom_bar(aes(y = ..prop.., fill = factor(..x..)), stat="count") +
-geom_text(aes( label = scales::percent(..prop..),
-y= ..prop.. ), stat= "count", vjust = -.5) +
-labs(y = "Percent", fill="Attrition_Lvl") +
-facet_grid(~EducationField) +
-scale_y_continuous(labels = scales::percent)
-```
 
